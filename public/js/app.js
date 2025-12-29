@@ -9,6 +9,12 @@ const mealTypes = {
   'dinner': '🌙 晚餐'
 };
 
+// 检查是否为管理员模式
+function isAdmin() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('role') === 'admin';
+}
+
 // DOM 元素
 const dishModal = document.getElementById('dishModal');
 const videoModal = document.getElementById('videoModal');
@@ -39,6 +45,11 @@ function formatCurrentDate() {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
+  // 根据权限控制添加按钮显示
+  if (!isAdmin()) {
+    addDishBtn.style.display = 'none';
+  }
+  
   displayCurrentDate();
   loadDishes();
   initEventListeners();
@@ -210,28 +221,31 @@ function createDishItem(dish) {
   const actions = document.createElement('div');
   actions.className = 'dish-actions';
   
-  // 查看视频按钮（视频是可选的，只有有视频时才显示）
+  // 查看视频按钮（视频是可选的，只有有视频时才显示）- 醒目样式
   if (dish.video_path) {
     const videoBtn = document.createElement('button');
-    videoBtn.className = 'btn btn-secondary btn-small game-btn';
-    videoBtn.innerHTML = '🎬 视频';
+    videoBtn.className = 'btn btn-video game-btn';
+    videoBtn.innerHTML = '▶️ 观看视频';
     videoBtn.onclick = () => openVideoModal(dish);
     actions.appendChild(videoBtn);
   }
   
-  // 编辑按钮 - 使用弱化样式
-  const editBtn = document.createElement('button');
-  editBtn.className = 'btn btn-subtle edit';
-  editBtn.innerHTML = '✏️ 编辑';
-  editBtn.onclick = () => openModal(dish);
-  actions.appendChild(editBtn);
-  
-  // 删除按钮 - 使用弱化样式
-  const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'btn btn-subtle delete';
-  deleteBtn.innerHTML = '🗑️ 删除';
-  deleteBtn.onclick = () => deleteDish(dish.id);
-  actions.appendChild(deleteBtn);
+  // 只有管理员才能看到编辑和删除按钮
+  if (isAdmin()) {
+    // 编辑按钮 - 使用弱化样式
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-subtle edit';
+    editBtn.innerHTML = '✏️ 编辑';
+    editBtn.onclick = () => openModal(dish);
+    actions.appendChild(editBtn);
+    
+    // 删除按钮 - 使用弱化样式
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-subtle delete';
+    deleteBtn.innerHTML = '🗑️ 删除';
+    deleteBtn.onclick = () => deleteDish(dish.id);
+    actions.appendChild(deleteBtn);
+  }
   
   item.appendChild(actions);
   return item;
