@@ -219,16 +219,16 @@ function createDishItem(dish) {
     actions.appendChild(videoBtn);
   }
   
-  // 编辑按钮
+  // 编辑按钮 - 使用弱化样式
   const editBtn = document.createElement('button');
-  editBtn.className = 'btn btn-primary btn-small game-btn';
+  editBtn.className = 'btn btn-subtle edit';
   editBtn.innerHTML = '✏️ 编辑';
   editBtn.onclick = () => openModal(dish);
   actions.appendChild(editBtn);
   
-  // 删除按钮
+  // 删除按钮 - 使用弱化样式
   const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'btn btn-danger btn-small game-btn';
+  deleteBtn.className = 'btn btn-subtle delete';
   deleteBtn.innerHTML = '🗑️ 删除';
   deleteBtn.onclick = () => deleteDish(dish.id);
   actions.appendChild(deleteBtn);
