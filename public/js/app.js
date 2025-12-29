@@ -232,19 +232,25 @@ function createDishItem(dish) {
   
   // 只有管理员才能看到编辑和删除按钮
   if (isAdmin()) {
+    // 创建管理按钮容器
+    const adminActions = document.createElement('div');
+    adminActions.className = 'admin-actions';
+    
     // 编辑按钮 - 使用弱化样式
     const editBtn = document.createElement('button');
     editBtn.className = 'btn btn-subtle edit';
     editBtn.innerHTML = '✏️ 编辑';
     editBtn.onclick = () => openModal(dish);
-    actions.appendChild(editBtn);
+    adminActions.appendChild(editBtn);
     
     // 删除按钮 - 使用弱化样式
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'btn btn-subtle delete';
     deleteBtn.innerHTML = '🗑️ 删除';
     deleteBtn.onclick = () => deleteDish(dish.id);
-    actions.appendChild(deleteBtn);
+    adminActions.appendChild(deleteBtn);
+    
+    actions.appendChild(adminActions);
   }
   
   item.appendChild(actions);

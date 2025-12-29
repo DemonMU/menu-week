@@ -476,8 +476,17 @@ header h1 {
 
 .dish-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* 编辑和删除按钮容器 */
+.dish-actions .admin-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
 }
 
 .empty-meal {
@@ -761,10 +770,22 @@ form {
 
   .dish-actions {
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .dish-actions .btn {
+  .dish-actions .btn-video {
     width: 100%;
+  }
+
+  .dish-actions .admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .dish-actions .admin-actions .btn {
+    flex: 1;
   }
 }
 
