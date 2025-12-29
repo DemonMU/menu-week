@@ -88,15 +88,12 @@ function initEventListeners() {
     });
   });
 
-  // 点击模态框外部关闭
+  // 点击模态框外部关闭（仅菜品编辑弹窗，视频弹窗不自动关闭）
   window.addEventListener('click', (e) => {
     if (e.target === dishModal) {
       dishModal.style.display = 'none';
     }
-    if (e.target === videoModal) {
-      videoModal.style.display = 'none';
-      videoPlayer.pause();
-    }
+    // 视频弹窗点击蒙层不关闭，只能通过关闭按钮关闭
   });
 
   // ESC键关闭模态框
