@@ -6,7 +6,7 @@ const cors = require('cors');
 const { dbOperations } = require('./database');
 
 const app = express();
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 80;
 
 // 中间件
 app.use(cors());
