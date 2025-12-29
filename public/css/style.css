@@ -1,0 +1,821 @@
+/* ===== 游戏风格 - 每周食谱冒险 ===== */
+
+/* 导入像素字体 */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* 全局样式变量 - 游戏主题 */
+:root {
+  --primary-color: #FFD700;
+  --primary-dark: #FFA500;
+  --secondary-color: #00CED1;
+  --danger-color: #FF4757;
+  --success-color: #2ED573;
+  --background: #1a1a2e;
+  --background-secondary: #16213e;
+  --card-background: linear-gradient(145deg, #1f2937, #111827);
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --border-color: #4a5568;
+  --glow-primary: 0 0 20px rgba(255, 215, 0, 0.5);
+  --glow-secondary: 0 0 15px rgba(0, 206, 209, 0.4);
+  --pixel-border: 4px;
+  --border-radius: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 游戏背景效果 */
+.game-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at top, #1a1a2e 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, #16213e 0%, transparent 50%),
+    linear-gradient(180deg, #0f0c29, #302b63, #24243e);
+  z-index: -2;
+}
+
+.game-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 206, 209, 0.1) 0%, transparent 50%);
+  z-index: -1;
+  animation: bgPulse 8s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 星星动画背景 */
+.game-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 230px 80px, #fff, transparent),
+    radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.7), transparent);
+  background-size: 350px 200px;
+  animation: twinkle 5s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+/* 头部样式 - 游戏风格 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 25px 30px;
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  border: 3px solid var(--primary-color);
+  box-shadow: var(--glow-primary), inset 0 0 30px rgba(255, 215, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  animation: headerShine 3s ease-in-out infinite;
+}
+
+@keyframes headerShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+header h1 {
+  font-size: 1.8em;
+  color: var(--primary-color);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 2px 2px 0 #000;
+  letter-spacing: 2px;
+}
+
+/* 当前日期显示 */
+.current-date {
+  font-size: 1em;
+  color: var(--secondary-color);
+  text-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.current-date .date-icon {
+  font-size: 1.2em;
+}
+
+.current-date .date-text {
+  font-weight: 600;
+}
+
+/* 游戏按钮样式 */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.game-btn {
+  border: 3px solid;
+  clip-path: polygon(
+    0 10px, 10px 10px, 10px 0,
+    calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px,
+    100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%,
+    10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px)
+  );
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #FFD700, #FFA500);
+  color: #1a1a2e;
+  border-color: #FFD700;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #FFA500, #FF8C00);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--glow-primary);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, #4a5568, #2d3748);
+  color: var(--text-primary);
+  border-color: #4a5568;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(180deg, #5a6578, #3d4758);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: linear-gradient(180deg, #FF4757, #c0392b);
+  color: white;
+  border-color: #FF4757;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(180deg, #FF6B7A, #e74c3c);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+}
+
+.btn-small {
+  padding: 8px 14px;
+  font-size: 0.8em;
+}
+
+.btn-icon {
+  font-size: 1.2em;
+}
+
+/* 周菜单布局 */
+.week-menu {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* 每天的卡片 - 游戏风格 */
+.day-card {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 20px 15px;
+  border: 2px solid var(--border-color);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.day-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--secondary-color);
+  box-shadow: var(--glow-secondary);
+}
+
+.day-card:hover::before {
+  opacity: 1;
+}
+
+/* 今天的卡片 - 突出显示 */
+.day-card.today {
+  border: 3px solid var(--primary-color);
+  box-shadow: var(--glow-primary), 0 0 40px rgba(255, 215, 0, 0.2);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.day-card.today::before {
+  height: 6px;
+  background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+  opacity: 1;
+  animation: todayGlow 2s ease-in-out infinite;
+}
+
+@keyframes todayGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.day-card.today .day-header {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.day-card.today::after {
+  content: '⭐ 今天';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #1a1a2e;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75em;
+  font-weight: bold;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.day-header {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed var(--border-color);
+  text-align: center;
+  text-shadow: 0 0 5px rgba(0, 206, 209, 0.3);
+}
+
+.meal-section {
+  margin-bottom: 15px;
+}
+
+.meal-type {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meal-type::before {
+  content: '▸';
+  color: var(--secondary-color);
+}
+
+/* 菜品项 - 游戏卡牌风格 */
+.dish-item {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.dish-item:hover {
+  border-color: var(--primary-color);
+  background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(0,0,0,0.3));
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.dish-name {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dish-name::before {
+  content: '🍖';
+  font-size: 0.9em;
+}
+
+.dish-description {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  padding-left: 22px;
+}
+
+.dish-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.empty-meal {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.85em;
+  padding: 10px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* 模态框样式 - 游戏风格 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--card-background);
+  margin: 3% auto;
+  padding: 0;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 550px;
+  animation: slideDown 0.3s ease;
+}
+
+.game-modal {
+  border: 3px solid var(--primary-color);
+  box-shadow: var(--glow-primary), 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.video-modal-content {
+  max-width: 900px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 2px solid var(--border-color);
+  background: linear-gradient(180deg, rgba(255,215,0,0.1), transparent);
+}
+
+.modal-header h2 {
+  color: var(--primary-color);
+  font-size: 1.4em;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.game-close {
+  color: var(--text-secondary);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+
+.game-close:hover {
+  color: var(--danger-color);
+  background: rgba(255, 71, 87, 0.2);
+  transform: rotate(90deg);
+}
+
+/* 表单样式 */
+.modal-body {
+  padding: 25px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.form-group select option {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.form-group input[type="file"] {
+  padding: 12px;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: var(--secondary-color);
+  background: rgba(0, 206, 209, 0.1);
+}
+
+.help-text {
+  display: block;
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+
+.current-video {
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(0, 206, 209, 0.1);
+  border-radius: 8px;
+  font-size: 0.9em;
+  border: 1px solid rgba(0, 206, 209, 0.3);
+}
+
+.current-video a {
+  color: var(--secondary-color);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 2px dashed var(--border-color);
+}
+
+/* 视频容器 */
+.video-container {
+  padding: 20px;
+  background: #000;
+}
+
+.video-container video {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 1200px) {
+  .week-menu {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .day-card.today {
+    transform: scale(1);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .week-menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .header-left {
+    align-items: center;
+  }
+
+  header h1 {
+    font-size: 1.4em;
+  }
+
+  .week-menu {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .day-card {
+    min-height: auto;
+  }
+
+  .day-card.today {
+    transform: none;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 5% auto;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .dish-actions {
+    flex-direction: column;
+  }
+
+  .dish-actions .btn {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  header h1 {
+    font-size: 1.2em;
+  }
+
+  .day-header {
+    font-size: 1em;
+  }
+
+  .dish-name {
+    font-size: 0.95em;
+  }
+
+  .modal-header h2 {
+    font-size: 1.2em;
+  }
+}
+
+/* 加载动画 - 游戏风格 */
+.loading {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--secondary-color);
+  font-size: 1.2em;
+  grid-column: 1 / -1;
+}
+
+.loading::before {
+  content: '🎮';
+  display: block;
+  font-size: 3em;
+  margin-bottom: 15px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.loading::after {
+  content: '';
+  animation: loadingDots 1.5s steps(4, end) infinite;
+}
+
+@keyframes loadingDots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75%, 100% { content: '...'; }
+}
+
+/* 通知样式 - 游戏风格 */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  z-index: 10000;
+  border: 2px solid;
+  animation: notificationIn 0.4s ease;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #2ED573, #1e8c49);
+  border-color: #2ED573;
+  box-shadow: 0 0 20px rgba(46, 213, 115, 0.5);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #FF4757, #c0392b);
+  border-color: #FF4757;
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+}
+
+@keyframes notificationIn {
+  from {
+    transform: translateX(400px) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes notificationOut {
+  from {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* 模态框滚动条 */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
