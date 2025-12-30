@@ -316,35 +316,104 @@ async function handleFormSubmit(e) {
     formData.delete('video');
   }
   
-  try {
-    let response;
-    
-    if (currentEditId) {
-      // 更新菜品
-      response = await fetch(`${API_URL}/${currentEditId}`, {
-        method: 'PUT',
+  const url = currentEditId ? `${API_URL}/${currentEditId}` : API_URL;
+  const method = currentEditId ? 'PUT' : 'POST';
+  
+  // 如果有视频文件，使用 XMLHttpRequest 显示进度
+  if (videoFile) {
+    uploadWithProgress(url, method, formData);
+  } else {
+    // 没有视频，直接使用 fetch
+    try {
+      const response = await fetch(url, {
+        method: method,
         body: formData
       });
-    } else {
-      // 添加新菜品
-      response = await fetch(API_URL, {
-        method: 'POST',
-        body: formData
-      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || '操作失败');
+      }
+      
+      dishModal.style.display = 'none';
+      await loadDishes();
+      showNotification(currentEditId ? '🎉 菜品更新成功！' : '🎉 菜品添加成功！', 'success');
+    } catch (error) {
+      console.error('提交失败:', error);
+      showNotification('❌ 操作失败: ' + error.message, 'error');
     }
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || '操作失败');
-    }
-    
-    dishModal.style.display = 'none';
-    await loadDishes();
-    showNotification(currentEditId ? '🎉 菜品更新成功！' : '🎉 菜品添加成功！', 'success');
-  } catch (error) {
-    console.error('提交失败:', error);
-    showNotification('❌ 操作失败: ' + error.message, 'error');
   }
+}
+
+// 带进度的上传函数
+function uploadWithProgress(url, method, formData) {
+  const xhr = new XMLHttpRequest();
+  const progressContainer = document.getElementById('uploadProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const submitBtn = dishForm.querySelector('button[type="submit"]');
+  
+  // 显示进度条
+  progressContainer.style.display = 'block';
+  progressFill.style.width = '0%';
+  progressText.textContent = '0%';
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>⭐ 上传中...</span>';
+  
+  // 上传进度事件
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      const percent = Math.round((e.loaded / e.total) * 100);
+      progressFill.style.width = percent + '%';
+      progressText.textContent = percent + '%';
+      
+      // 添加颜色变化效果
+      if (percent < 30) {
+        progressFill.style.background = 'linear-gradient(90deg, #FF6B6B, #FF8E8E)';
+      } else if (percent < 70) {
+        progressFill.style.background = 'linear-gradient(90deg, #FFD700, #FFA500)';
+      } else {
+        progressFill.style.background = 'linear-gradient(90deg, #2ED573, #1e8c49)';
+      }
+    }
+  });
+  
+  // 上传完成
+  xhr.addEventListener('load', async () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      progressText.textContent = '✅ 完成';
+      setTimeout(() => {
+        progressContainer.style.display = 'none';
+        dishModal.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>✅ 保存</span>';
+        loadDishes();
+        showNotification(currentEditId ? '🎉 菜品更新成功！' : '🎉 菜品添加成功！', 'success');
+      }, 500);
+    } else {
+      let errorMsg = '上传失败';
+      try {
+        const error = JSON.parse(xhr.responseText);
+        errorMsg = error.message || errorMsg;
+      } catch (e) {}
+      progressContainer.style.display = 'none';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✅ 保存</span>';
+      showNotification('❌ ' + errorMsg, 'error');
+    }
+  });
+  
+  // 上传错误
+  xhr.addEventListener('error', () => {
+    progressContainer.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>✅ 保存</span>';
+    showNotification('❌ 网络错误，上传失败', 'error');
+  });
+  
+  // 发送请求
+  xhr.open(method, url);
+  xhr.send(formData);
 }
 
 // 删除菜品

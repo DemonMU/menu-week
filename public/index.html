@@ -79,6 +79,12 @@
             <label for="videoFile">🎬 烹饪视频（可选）</label>
             <input type="file" id="videoFile" name="video" accept="video/*">
             <small class="help-text">支持 MP4, MOV, WEBM 格式，最大 100MB</small>
+            <div id="uploadProgress" class="upload-progress" style="display: none;">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="progress-text" id="progressText">0%</div>
+            </div>
             <div id="currentVideo" class="current-video"></div>
           </div>
 
